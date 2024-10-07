@@ -18,6 +18,7 @@
 #include "utils/gettime.h"
 #include "utils/section_type.h"
 #include "utils/string.h"
+#include "fiberpath.h"
 
 namespace cura
 {
@@ -222,6 +223,66 @@ bool loadMeshSTL_binary(Mesh* mesh, const char* filename, const Matrix4x3D& matr
     return true;
 }
 
+bool loadFiberPathTXT(FiberPaths* fiberpaths, const char* filename, const Matrix4x3D& matrix)
+{
+    FILE* f = fopen(filename, "r");
+    if (! f)
+    {
+        spdlog::error("Failed to open FiberPath file: {}", filename);
+        return false;
+    }
+    char buffer[256];
+    std::set<int> zSet;
+    coord_t last_z = -999;
+    int last_index = -999;
+    OpenPolyline cur_poly;
+    FiberPath cur_fiberpath;
+    while (fgets(buffer, sizeof(buffer), f))
+    {
+        float fx, fy, fz;
+        coord_t x, y, z;
+        int index;
+        if (sscanf(buffer, "%f %f %f %d", &fx, &fy, &fz, &index) != 4)
+        {
+            spdlog::warn("Failed to parse line: {}", buffer);
+            continue;
+        }
+        x = MM2INT(fx);
+        y = MM2INT(fy);
+        z = MM2INT(fz);
+
+        if (zSet.find(z) == zSet.end())
+        {
+            if (cur_fiberpath.paths.size() > 1)
+            {
+                fiberpaths->paths.emplace_back(cur_fiberpath);
+            }
+            FiberPath fiberpath(z);
+            cur_fiberpath = fiberpath;
+            zSet.insert(z);
+        }
+        if (index != last_index)
+        {
+            if (cur_poly.size() > 2)
+            {
+                cur_fiberpath.paths.emplace_back(cur_poly);
+            }
+            OpenPolyline poly;
+            cur_poly = poly;
+            last_index = index;
+        }
+        cur_poly.emplace_back(Point2LL(x, y));
+    }
+    if (cur_poly.size() > 2)
+    {
+        cur_fiberpath.paths.emplace_back(cur_poly);
+        fiberpaths->paths.emplace_back(cur_fiberpath);
+    }
+    fclose(f);
+    return true;
+
+}
+
 bool loadMeshSTL(Mesh* mesh, const char* filename, const Matrix4x3D& matrix)
 {
     FILE* f = fopen(filename, "rb");
@@ -299,5 +360,28 @@ bool loadMeshIntoMeshGroup(MeshGroup* meshgroup, const char* filename, const Mat
     spdlog::warn("Unable to recognize the extension of the file. Currently only .stl and .STL are supported.");
     return false;
 }
+
+bool loadFiberPathIntoMeshGroup(MeshGroup* meshgroup, const char* filename, const Matrix4x3D& transformation, Settings& object_parent_settings)
+{
+    TimeKeeper load_timer;
+
+    const char* ext = strrchr(filename, '.');
+    if (ext && (strcmp(ext, ".txt") == 0 || strcmp(ext, ".TXT") == 0))
+    {
+        FiberPaths fiberpaths;
+        if (loadFiberPathTXT(&fiberpaths, filename, transformation)) // Load it! If successful...
+        {
+            //meshgroup->meshes.push_back(fiberpaths);
+            spdlog::info("loading '{}' took {:03.3f} seconds", filename, load_timer.restart());
+            return true;
+        }
+        spdlog::warn("loading '{}' failed", filename);
+        return false;
+    }
+    spdlog::warn("Unable to recognize the extension of the file. Currently only .txt and .TXT are supported.");
+    return false;
+}
+
+
 
 } // namespace cura

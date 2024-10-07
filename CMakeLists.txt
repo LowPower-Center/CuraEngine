@@ -86,6 +86,8 @@ set(engine_SRCS # Except main.cpp.
         src/WallsComputation.cpp
         src/WallToolPaths.cpp
 
+        src/fiberpath.cpp
+
         src/BeadingStrategy/BeadingStrategy.cpp
         src/BeadingStrategy/BeadingStrategyFactory.cpp
         src/BeadingStrategy/DistributedBeadingStrategy.cpp
@@ -258,7 +260,7 @@ else ()
                 "<CMAKE_RC_COMPILER> <FLAGS> -O coff <DEFINES> -i <SOURCE> -o <OBJECT>"
         )
     endif ()
-    add_executable(CuraEngine src/main.cpp ${RES_FILES}) # ..., but don't forget the glitter!
+add_executable(CuraEngine src/main.cpp ${RES_FILES}) # ..., but don't forget the glitter!
     if (ENABLE_SENTRY)
         set_target_properties(CuraEngine PROPERTIES LINK_FLAGS "/DEBUG:FULL")
     endif ()

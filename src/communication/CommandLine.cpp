@@ -293,6 +293,28 @@ void CommandLine::sliceNext()
                     last_extruder = &slice.scene.extruders[extruder_nr];
                     break;
                 }
+                case 'f':
+                {
+                    argument_index++;
+                    if (argument_index >= arguments_.size())
+                    {
+                        spdlog::error("Missing fiber path file with -f argument.");
+                        exit(1);
+                    }
+                    argument = arguments_[argument_index];
+
+                    const auto transformation = last_settings->get<Matrix4x3D>("mesh_rotation_matrix"); // The transformation applied to the fiber path when loaded.
+
+                    if (! loadFiberPathIntoMeshGroup(&slice.scene.mesh_groups[mesh_group_index], argument.c_str(), transformation, last_extruder->settings_))
+                    {
+                        spdlog::error("Failed to load fiber path: {}. (error number {})", argument, errno);
+                        exit(1);
+                    }
+                    else
+                    {
+                    }
+                    break;
+                }
                 case 'l':
                 {
                     argument_index++;

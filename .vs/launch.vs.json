@@ -1,0 +1,29 @@
+{
+  "version": "0.2.1",
+  "defaults": {},
+  "configurations": [
+    {
+      "args": [
+        "slice",
+        //"-v",
+        //"-p",
+        "-j",
+        "../../cmd_test/definitions/fdmprinter.def.json",
+        "-f",
+        "../../cmd_test/hook.txt",
+        "-s",
+        "roofing_layer_count=0",
+        "-o",
+        "../../cmd_test/hook.gcode",
+        "-l",
+        "../../cmd_test/complex_conrod.stl"
+      ],
+      "name": "CuraEngine.exe",
+      "project": "CMakeLists.txt",
+      "projectTarget": "CuraEngine.exe",
+      "type": "default"
+    }
+
+  ]
+
+}

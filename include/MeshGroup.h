@@ -6,6 +6,7 @@
 
 #include "mesh.h"
 #include "utils/NoCopy.h"
+#include "fiberpath.h"
 
 namespace cura
 {
@@ -34,6 +35,7 @@ public:
     MeshGroup& operator=(const MeshGroup& other) = delete;
 
     std::vector<Mesh> meshes;
+    std::vector<FiberPaths> fiberpaths; 
     Settings settings;
 
     Point3LL min() const; //! minimal corner of bounding box
@@ -63,6 +65,19 @@ public:
  * \return whether the file could be loaded
  */
 bool loadMeshIntoMeshGroup(MeshGroup* meshgroup, const char* filename, const Matrix4x3D& transformation, Settings& object_parent_settings);
+
+/*!
+ * Load a FiberPathGroup from file and store it in the \p meshgroup.
+ *
+ * \param meshgroup The meshgroup where to store the fiberpath
+ * \param filename The filename of the fiberpath file
+ * \param transformation The transformation applied to all vertices
+ * \param object_parent_settings (optional) The parent settings object of the new mesh. Defaults to \p meshgroup if none is given.
+ * \return whether the file could be loaded
+ */
+
+
+bool loadFiberPathIntoMeshGroup(MeshGroup* meshgroup, const char* filename, const Matrix4x3D& transformation, Settings& object_parent_settings);
 
 } // namespace cura
 

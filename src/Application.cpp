@@ -125,7 +125,7 @@ void Application::printHelp() const
     fmt::print("  -m<thread_count>\n\tSet the desired number of threads. Supports only a single digit.\n");
     fmt::print("\n");
 #endif // ARCUS
-    fmt::print("CuraEngine slice [-v] [-p] [-j <settings.json>] [-s <settingkey>=<value>] [-g] [-e<extruder_nr>] [-o <output.gcode>] [-l <model.stl>] [--next]\n");
+    fmt::print("CuraEngine slice [-v] [-p] [-j <settings.json>] [-s <settingkey>=<value>] [-g] [-e<extruder_nr>] [-o <output.gcode>] [-l <model.stl>] [-f <fiberpath.json>] [--next]\n");
     fmt::print("  -v\n\tIncrease the verbose level (show log messages).\n");
     fmt::print("  -m<thread_count>\n\tSet the desired number of threads.\n");
     fmt::print("  -p\n\tLog progress information.\n");
@@ -134,6 +134,7 @@ void Application::printHelp() const
     fmt::print("  -r\n\tLoad a json file containing resolved setting values.\n");
     fmt::print("  -s <setting>=<value>\n\tSet a setting to a value for the last supplied object, \n\textruder train, or general settings.\n");
     fmt::print("  -l <model_file>\n\tLoad an STL model. \n");
+    fmt::print("  -f <fiber_path>\n\tLoad FiberPath into current MeshGroup. \n");
     fmt::print("  -g\n\tSwitch setting focus to the current mesh group only.\n\tUsed for one-at-a-time printing.\n");
     fmt::print("  -e<extruder_nr>\n\tSwitch setting focus to the extruder train with the given number.\n");
     fmt::print("  --next\n\tGenerate gcode for the previously supplied mesh group and append that to \n\tthe gcode of further models for one-at-a-time printing.\n");
@@ -274,6 +275,10 @@ void Application::run(const size_t argc, char** argv)
 void Application::startThreadPool(int nworkers)
 {
     size_t nthreads;
+#ifdef DEBUG  // let thread = 1 to debug parallel process
+    nworkers = 1;
+#endif // DEBUG  // let thread = 1 to debug parallel process
+
     if (nworkers <= 0)
     {
         if (thread_pool_)

@@ -69,7 +69,7 @@ public:
     std::vector<SkinPart> skin_parts; //!< The skin parts which are filled for 100% with lines and/or insets.
     std::vector<VariableWidthLines> wall_toolpaths; //!< toolpaths for walls, will replace(?) the insets. Binned by inset_idx.
     std::vector<VariableWidthLines> infill_wall_toolpaths; //!< toolpaths for the walls of the infill areas. Binned by inset_idx.
-
+    OpenLinesSet fiberpath;
     /*!
      * The areas inside of the mesh.
      * Like SliceLayerPart::outline, this class member is not used to actually determine the feature area,

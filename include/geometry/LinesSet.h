@@ -246,6 +246,7 @@ public:
     void removeDegenerateVerts();
 
     [[nodiscard]] Shape offset(coord_t distance, ClipperLib::JoinType join_type = ClipperLib::jtMiter, double miter_limit = 1.2) const;
+    [[nodiscard]] OpenLinesSet lineCut(const Shape& cutter) const;
 
     /*!
      * Utility method for creating the tube (or 'donut') of a shape.

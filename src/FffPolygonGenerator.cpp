@@ -322,7 +322,11 @@ bool FffPolygonGenerator::sliceModel(MeshGroup* meshgroup, TimeKeeper& timeKeepe
                     meshStorage.layers[layer_nr].thickness = layer_thickness;
                 }
             }
-
+            for (FiberPaths& paths : meshgroup->fiberpaths)
+            {
+                insertFiberPath(meshStorage, paths);
+            }
+            
             // add the raft offset to each layer
             if (has_raft)
             {

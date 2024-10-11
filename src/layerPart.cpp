@@ -12,7 +12,7 @@
 #include "utils/OpenPolylineStitcher.h"
 #include "utils/Simplify.h" //Simplifying the layers after creating them.
 #include "utils/ThreadPool.h"
-
+#include "fiberpath.h"
 /*
 The layer-part creation step is the first step in creating actual useful data for 3D printing.
 It takes the result of the Slice step, which is an unordered list of polygons_, and makes groups of polygons_,
@@ -81,6 +81,30 @@ void createLayerWithParts(const Settings& settings, SliceLayer& storageLayer, Sl
     }
 }
 
+void insertFiberPath(SliceMeshStorage& meshStorage, FiberPaths& fiberpath)
+{
+    for (LayerIndex layer_nr = 0; layer_nr < meshStorage.layers.size() - 1; layer_nr++)
+    {
+        SliceLayer& layer = meshStorage.layers[layer_nr];
+        size_t z_height = layer.printZ;
+        for (FiberPath& path : fiberpath.paths)
+        {
+            size_t match_z = path.z_;
+            if (std::fabs(match_z - z_height) < (layer.thickness / 2 - 1))
+            {
+                for (SliceLayerPart& part : layer.parts)
+                {
+                    OpenLinesSet resLines = path.paths.lineCut(part.outline);
+                    if (resLines.size() > 0)
+                    {
+                        part.fiberpath.push_back(resLines);
+                    }
+                }
+            }
+
+        }
+    }
+}
 void createLayerParts(SliceMeshStorage& mesh, Slicer* slicer)
 {
     const auto total_layers = slicer->layers.size();

@@ -3,7 +3,7 @@
 
 #ifndef LAYERPART_H
 #define LAYERPART_H
-
+#include "fiberpath.h"
 /*
 The layer-part creation step is the first step in creating actual useful data for 3D printing.
 It takes the result of the Slice step, which is an unordered list of polygons, and makes groups of polygons,
@@ -33,6 +33,8 @@ class SliceMeshStorage;
  * \param layer The layer to split.
  */
 void createLayerWithParts(const Settings& settings, SliceLayer& storageLayer, SlicerLayer* layer);
+
+void insertFiberPath(SliceMeshStorage& mesh, FiberPaths& fiberpath);
 
 /*!
  * \brief Split all layers into parts.

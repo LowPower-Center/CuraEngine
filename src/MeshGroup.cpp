@@ -263,7 +263,7 @@ bool loadFiberPathTXT(FiberPaths* fiberpaths, const char* filename, const Matrix
         }
         if (index != last_index)
         {
-            if (cur_poly.size() > 2)
+            if (cur_poly.size() > 1)
             {
                 cur_fiberpath.paths.emplace_back(cur_poly);
             }
@@ -273,7 +273,7 @@ bool loadFiberPathTXT(FiberPaths* fiberpaths, const char* filename, const Matrix
         }
         cur_poly.emplace_back(Point2LL(x, y));
     }
-    if (cur_poly.size() > 2)
+    if (cur_poly.size() > 1)
     {
         cur_fiberpath.paths.emplace_back(cur_poly);
         fiberpaths->paths.emplace_back(cur_fiberpath);
@@ -371,7 +371,7 @@ bool loadFiberPathIntoMeshGroup(MeshGroup* meshgroup, const char* filename, cons
         FiberPaths fiberpaths;
         if (loadFiberPathTXT(&fiberpaths, filename, transformation)) // Load it! If successful...
         {
-            //meshgroup->meshes.push_back(fiberpaths);
+            meshgroup->fiberpaths.push_back(fiberpaths);
             spdlog::info("loading '{}' took {:03.3f} seconds", filename, load_timer.restart());
             return true;
         }

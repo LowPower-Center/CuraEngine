@@ -5,25 +5,21 @@
     {
       "args": [
         "slice",
-        //"-v",
-        //"-p",
         "-j",
-        "../../cmd_test/definitions/fdmprinter.def.json",
+        "../../cmd_test/definitions/custom.json",
         "-f",
-        "../../cmd_test/hook.txt",
+        "../../cmd_test/test.txt",
         "-s",
         "roofing_layer_count=0",
         "-o",
         "../../cmd_test/hook.gcode",
         "-l",
-        "../../cmd_test/complex_conrod.stl"
+        "../../cmd_test/test.stl"
       ],
       "name": "CuraEngine.exe",
       "project": "CMakeLists.txt",
       "projectTarget": "CuraEngine.exe",
       "type": "default"
     }
-
   ]
-
 }

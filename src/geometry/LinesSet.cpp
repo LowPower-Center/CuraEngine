@@ -207,6 +207,24 @@ Shape OpenLinesSet::offset(coord_t distance, ClipperLib::JoinType join_type, dou
 
     return Shape{ std::move(result_paths) };
 }
+template<>
+OpenLinesSet OpenLinesSet::lineCut(const Shape& other) const
+{
+    if (empty() || other.empty())
+    {
+        return {};
+    }
+    ClipperLib::Paths ret;
+    ClipperLib::PolyTree resultPolyTree;
+    ClipperLib::Clipper clipper(clipper_init);
+    addPaths(clipper, ClipperLib::ptSubject);
+    other.addPaths(clipper, ClipperLib::ptClip);
+    clipper.Execute(ClipperLib::ctIntersection, resultPolyTree);
+    ClipperLib::PolyTreeToPaths(resultPolyTree, ret);
+    return OpenLinesSet{ std::move(ret) };
+
+}
+
 
 template<class LineType>
 void LinesSet<LineType>::removeDegenerateVerts()

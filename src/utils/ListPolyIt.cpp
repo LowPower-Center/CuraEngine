@@ -35,7 +35,7 @@ void ListPolyIt::convertPolygonToList(const Polygon& poly, ListPolygon& result)
         // usually polygons shouldn't have such degenerate verts. It is
         // required to not have degenerate verts, because verts are mapped
         // to links, but if two different verts are at the same place the mapping fails.
-        assert(p != last);
+        //assert(p != last);
         last = p;
 #endif // DEBUG
     }

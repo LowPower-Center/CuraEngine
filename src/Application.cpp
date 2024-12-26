@@ -153,6 +153,7 @@ void Application::printHeader() const
 {
     fmt::print("\n");
     fmt::print("Cura_SteamEngine version {}\n", CURA_ENGINE_VERSION);
+    fmt::print("This version has been revised by Chen\n");
 
 #ifdef DEBUG
     fmt::print("\n");

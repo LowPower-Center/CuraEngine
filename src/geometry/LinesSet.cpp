@@ -87,7 +87,7 @@ void LinesSet<LineType>::removeAt(size_t index)
     }
     else if (lines_.size() > 1)
     {
-        //assert(index < lines_.size());
+        // assert(index < lines_.size());
         if (index < lines_.size() - 1)
         {
             lines_[index] = std::move(lines_.back());

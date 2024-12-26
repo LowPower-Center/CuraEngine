@@ -76,7 +76,7 @@ public:
 
     bool isCentral() const
     {
-        //assert(is_central != Central::UNKNOWN);
+        // assert(is_central != Central::UNKNOWN);
         return is_central == Central::YES;
     }
     void setIsCentral(bool b)
